@@ -21,10 +21,15 @@ func main() {
 	userRepository := repository.NewUserRepository()
 	userService := service.NewUserService(userRepository, db, validate)
 	userController := controller.NewUserController(userService)
+	userProfileService := service.NewUserProfileService(userRepository, db, validate)
+	userProfileController := controller.NewUserProfileController(userProfileService)
 
 	router := httprouter.New()
 	router.POST("/api/register", userController.Register)
 	router.POST("/api/login", userController.Login)
+	router.GET("/api/profile", userProfileController.FindAll)
+	router.PUT("/api/profile/update/:userId", userProfileController.Update)
+	router.PUT("/api/profile/image/:userId", userProfileController.UpdateImage)
 
 	router.NotFound = http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		exception.HandleNotFound(writer, request)

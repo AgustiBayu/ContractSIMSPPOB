@@ -36,10 +36,11 @@ func (service *UserServiceImpl) Register(ctx context.Context, request web.UserRe
 	helper.PanicIFError(err)
 
 	user := domain.User{
-		Email:    request.Email,
-		FirsName: request.FirsName,
-		LastName: request.LastName,
-		Password: string(HasPass),
+		Email:        request.Email,
+		FirsName:     request.FirsName,
+		LastName:     request.LastName,
+		Password:     string(HasPass),
+		ProfileImage: "https://asset.kompas.com/crops/BD5magRmejVwX0vqq28Ud2LxPXM=/0x1536:1920x2816/1200x800/data/photo/2023/04/28/644ba26ad81cb.jpg",
 	}
 	service.UserRepository.Save(ctx, tx, user)
 	return nil
