@@ -5,6 +5,7 @@ import (
 	"ContractSIMSPPOB/controller"
 	"ContractSIMSPPOB/exception"
 	"ContractSIMSPPOB/helper"
+	"ContractSIMSPPOB/middleware"
 	"ContractSIMSPPOB/repository"
 	"ContractSIMSPPOB/service"
 	"net/http"
@@ -26,14 +27,18 @@ func main() {
 	bannerRepository := repository.NewBannerRepository()
 	bannerService := service.NewBannerService(bannerRepository, db, validate)
 	bannerController := controller.NewBannerController(bannerService)
+	layananRepository := repository.NewLayananRepository()
+	layananService := service.NewLayananService(layananRepository, db, validate)
+	layananController := controller.NewLayananController(layananService)
 
 	router := httprouter.New()
 	router.POST("/api/register", userController.Register)
 	router.POST("/api/login", userController.Login)
-	router.GET("/api/profile", userProfileController.FindAll)
+	router.GET("/api/profile", middleware.JWTAuth(userService, userProfileController.FindAll))
 	router.PUT("/api/profile/update/:userId", userProfileController.Update)
 	router.PUT("/api/profile/image/:userId", userProfileController.UpdateImage)
 	router.GET("/api/banner", bannerController.FindAll)
+	router.GET("/api/services", layananController.FindAll)
 
 	router.NotFound = http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		exception.HandleNotFound(writer, request)

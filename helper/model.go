@@ -5,6 +5,24 @@ import (
 	"ContractSIMSPPOB/model/web"
 )
 
+func ToLayananResponses(banners []domain.Layanan) []web.LayananResponse {
+	var layananResponse []web.LayananResponse
+	for _, banner := range banners {
+		layananResponse = append(layananResponse, web.LayananResponse(banner))
+	}
+	return layananResponse
+}
+
+func ToLayananResponse(banner domain.Layanan) web.LayananResponse {
+	return web.LayananResponse{
+		Id:           banner.Id,
+		ServiceCode:  banner.ServiceCode,
+		ServiceName:  banner.ServiceName,
+		ServiceIcon:  banner.ServiceIcon,
+		ServiceTarif: banner.ServiceTarif,
+	}
+}
+
 func ToBannerResponses(banners []domain.Banner) []web.BannerResponse {
 	var bannerResponse []web.BannerResponse
 	for _, banner := range banners {

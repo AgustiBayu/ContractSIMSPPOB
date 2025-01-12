@@ -31,6 +31,7 @@ func (service *UserServiceImpl) Register(ctx context.Context, request web.UserRe
 	err := service.Validate.Struct(request)
 	helper.PanicIFError(err)
 	tx, err := service.DB.Begin()
+	helper.PanicIFError(err)
 	defer helper.RollbackOrCommit(tx)
 	HasPass, err := bcrypt.GenerateFromPassword([]byte(request.Password), bcrypt.DefaultCost)
 	helper.PanicIFError(err)
@@ -45,10 +46,12 @@ func (service *UserServiceImpl) Register(ctx context.Context, request web.UserRe
 	service.UserRepository.Save(ctx, tx, user)
 	return nil
 }
+
 func (service *UserServiceImpl) Login(ctx context.Context, request web.UserLoginRequst) (web.UserResponse, error) {
 	err := service.Validate.Struct(request)
 	helper.PanicIFError(err)
 	tx, err := service.DB.Begin()
+	helper.PanicIFError(err)
 	defer helper.RollbackOrCommit(tx)
 
 	user, err := service.UserRepository.FindByEmail(ctx, tx, request.Email)
@@ -61,5 +64,5 @@ func (service *UserServiceImpl) Login(ctx context.Context, request web.UserLogin
 	}
 
 	token, err := helper.GenerateJWT(user.Id, user.Email)
-	return web.UserResponse{Token: token}, err
+	return web.UserResponse{Token: "Bearer " + token}, err
 }
