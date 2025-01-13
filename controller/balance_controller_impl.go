@@ -36,3 +36,22 @@ func (controller *BalanceControllerImpl) GetBalanceByEmail(writer http.ResponseW
 	}
 	helper.WriteResponseBody(writer, webResponse)
 }
+
+func (controller *BalanceControllerImpl) TopUpSaldo(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	topupCreateRequest := web.TopupCreateRequest{}
+	helper.ReadRequstBody(request, &topupCreateRequest)
+	tokenString := request.Header.Get("Authorization")[7:] // Remove "Bearer " prefix
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return []byte(helper.GetSecretKey()), nil
+	})
+	helper.PanicIFError(err)
+	claims := token.Claims.(jwt.MapClaims)
+	email := claims["email"].(string)
+	balanceResponse := controller.BalanceService.TopUpSaldo(request.Context(), email, topupCreateRequest)
+	webResponse := web.WebResponse{
+		Code:    http.StatusOK,
+		Message: "Topup Balance Berhasil",
+		Data:    balanceResponse,
+	}
+	helper.WriteResponseBody(writer, webResponse)
+}

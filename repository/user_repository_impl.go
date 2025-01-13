@@ -101,3 +101,20 @@ func (u *UserRepositoryImpl) BalanceByEmail(ctx context.Context, tx *sql.Tx, ema
 		return user, errors.New("email not found")
 	}
 }
+func (u *UserRepositoryImpl) Topup(ctx context.Context, tx *sql.Tx, email string, amount int) error {
+	SQL := "UPDATE users SET saldo = saldo + $1 WHERE email = $2"
+	_, err := tx.ExecContext(ctx, SQL, amount, email)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (u *UserRepositoryImpl) SaveTransaction(ctx context.Context, tx *sql.Tx, email string, amount int, transactionType string) error {
+	SQL := "INSERT INTO transactions (email, amount, transaction_type) VALUES ($1, $2, $3)"
+	_, err := tx.ExecContext(ctx, SQL, email, amount, transactionType)
+	if err != nil {
+		return err
+	}
+	return nil
+}

@@ -7,6 +7,7 @@ import (
 	"ContractSIMSPPOB/repository"
 	"context"
 	"database/sql"
+	"errors"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -29,6 +30,24 @@ func (service *BalanceServiceImpl) GetBalanceByEmail(ctx context.Context, email 
 	tx, err := service.DB.Begin()
 	helper.PanicIFError(err)
 	defer helper.RollbackOrCommit(tx)
+	balance, err := service.UserRepository.BalanceByEmail(ctx, tx, email)
+	if err != nil {
+		panic(exception.NewNotFoundError(err.Error()))
+	}
+	return helper.ToBalanceResponse(balance)
+}
+
+func (service *BalanceServiceImpl) TopUpSaldo(ctx context.Context, email string, request web.TopupCreateRequest) web.BalanceResponse {
+	tx, err := service.DB.Begin()
+	helper.PanicIFError(err)
+	defer helper.RollbackOrCommit(tx)
+	if request.TopupAmoun <= 0 {
+		panic(errors.New("amount must be greater than 0"))
+	}
+	err = service.UserRepository.Topup(ctx, tx, email, request.TopupAmoun)
+	helper.PanicIFError(err)
+	err = service.UserRepository.SaveTransaction(ctx, tx, email, request.TopupAmoun, "TOPUP")
+	helper.PanicIFError(err)
 	balance, err := service.UserRepository.BalanceByEmail(ctx, tx, email)
 	if err != nil {
 		panic(exception.NewNotFoundError(err.Error()))

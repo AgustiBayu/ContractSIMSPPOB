@@ -14,5 +14,7 @@ type UserRepository interface {
 	Update(ctx context.Context, tx *sql.Tx, user domain.User) domain.User
 	UpdateImage(ctx context.Context, tx *sql.Tx, user domain.User) domain.User
 	BalanceByEmail(ctx context.Context, tx *sql.Tx, email string) (domain.User, error)
+	Topup(ctx context.Context, tx *sql.Tx, email string, amount int) error
+	SaveTransaction(ctx context.Context, tx *sql.Tx, email string, amount int, transactionType string) error
 	Delete(ctx context.Context, tx *sql.Tx, user domain.User)
 }

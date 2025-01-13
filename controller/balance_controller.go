@@ -8,4 +8,5 @@ import (
 
 type BalanceController interface {
 	GetBalanceByEmail(writer http.ResponseWriter, request *http.Request, params httprouter.Params)
+	TopUpSaldo(writer http.ResponseWriter, request *http.Request, params httprouter.Params)
 }
