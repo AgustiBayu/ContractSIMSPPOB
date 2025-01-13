@@ -13,5 +13,6 @@ type UserRepository interface {
 	FindByEmail(ctx context.Context, tx *sql.Tx, email string) (domain.User, error)
 	Update(ctx context.Context, tx *sql.Tx, user domain.User) domain.User
 	UpdateImage(ctx context.Context, tx *sql.Tx, user domain.User) domain.User
+	BalanceByEmail(ctx context.Context, tx *sql.Tx, email string) (domain.User, error)
 	Delete(ctx context.Context, tx *sql.Tx, user domain.User)
 }

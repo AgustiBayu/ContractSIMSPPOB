@@ -30,6 +30,8 @@ func main() {
 	layananRepository := repository.NewLayananRepository()
 	layananService := service.NewLayananService(layananRepository, db, validate)
 	layananController := controller.NewLayananController(layananService)
+	balanceService := service.NewBalanceService(userRepository, db, validate)
+	balanceController := controller.NewBalanceController(balanceService)
 
 	router := httprouter.New()
 	router.POST("/api/register", userController.Register)
@@ -39,6 +41,7 @@ func main() {
 	router.PUT("/api/profile/image/:userId", userProfileController.UpdateImage)
 	router.GET("/api/banner", bannerController.FindAll)
 	router.GET("/api/services", layananController.FindAll)
+	router.GET("/api/balance", middleware.JWTAuth(userService, balanceController.GetBalanceByEmail))
 
 	router.NotFound = http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		exception.HandleNotFound(writer, request)

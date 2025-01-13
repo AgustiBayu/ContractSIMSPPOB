@@ -42,6 +42,7 @@ func (service *UserServiceImpl) Register(ctx context.Context, request web.UserRe
 		LastName:     request.LastName,
 		Password:     string(HasPass),
 		ProfileImage: "https://asset.kompas.com/crops/BD5magRmejVwX0vqq28Ud2LxPXM=/0x1536:1920x2816/1200x800/data/photo/2023/04/28/644ba26ad81cb.jpg",
+		Saldo:        0,
 	}
 	service.UserRepository.Save(ctx, tx, user)
 	return nil

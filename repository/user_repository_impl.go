@@ -15,9 +15,9 @@ func NewUserRepository() UserRepository {
 }
 
 func (u *UserRepositoryImpl) Save(ctx context.Context, tx *sql.Tx, user domain.User) domain.User {
-	SQL := "INSERT INTO users(email, firs_name, last_name, password, profile_image) VALUES($1,$2,$3,$4,$5) RETURNING id"
+	SQL := "INSERT INTO users(email, firs_name, last_name, password, profile_image, saldo) VALUES($1,$2,$3,$4,$5,$6) RETURNING id"
 	var id int
-	err := tx.QueryRowContext(ctx, SQL, user.Email, user.FirsName, user.LastName, user.Password, user.ProfileImage).Scan(&id)
+	err := tx.QueryRowContext(ctx, SQL, user.Email, user.FirsName, user.LastName, user.Password, user.ProfileImage, user.Saldo).Scan(&id)
 	helper.PanicIFError(err)
 	user.Id = id
 	return user
@@ -83,5 +83,21 @@ func (u *UserRepositoryImpl) FindByEmail(ctx context.Context, tx *sql.Tx, email 
 		return user, nil
 	} else {
 		return user, errors.New("user id not found")
+	}
+}
+
+func (u *UserRepositoryImpl) BalanceByEmail(ctx context.Context, tx *sql.Tx, email string) (domain.User, error) {
+	SQL := "SELECT saldo FROM users WHERE email = $1"
+	row, err := tx.QueryContext(ctx, SQL, email)
+	helper.PanicIFError(err)
+	defer row.Close()
+
+	user := domain.User{}
+	if row.Next() {
+		err := row.Scan(&user.Saldo)
+		helper.PanicIFError(err)
+		return user, nil
+	} else {
+		return user, errors.New("email not found")
 	}
 }

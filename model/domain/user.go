@@ -7,4 +7,5 @@ type User struct {
 	LastName     string
 	Password     string
 	ProfileImage string
+	Saldo        int
 }

@@ -23,6 +23,12 @@ func ToLayananResponse(banner domain.Layanan) web.LayananResponse {
 	}
 }
 
+func ToBalanceResponse(saldo domain.User) web.BalanceResponse {
+	return web.BalanceResponse{
+		Saldo: saldo.Saldo,
+	}
+}
+
 func ToBannerResponses(banners []domain.Banner) []web.BannerResponse {
 	var bannerResponse []web.BannerResponse
 	for _, banner := range banners {
