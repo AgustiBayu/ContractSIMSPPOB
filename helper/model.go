@@ -3,6 +3,7 @@ package helper
 import (
 	"ContractSIMSPPOB/model/domain"
 	"ContractSIMSPPOB/model/web"
+	"ContractSIMSPPOB/utils"
 )
 
 func ToLayananResponses(banners []domain.Layanan) []web.LayananResponse {
@@ -22,7 +23,16 @@ func ToLayananResponse(banner domain.Layanan) web.LayananResponse {
 		ServiceTarif: banner.ServiceTarif,
 	}
 }
-
+func ToTransactionResponse(layanan domain.Layanan, transaction domain.Transaction) web.TransactionResponse {
+	return web.TransactionResponse{
+		InvoiceNumber:   utils.GenerateInvoiceNumber(),
+		ServiceCode:     layanan.ServiceCode,
+		ServiceName:     layanan.ServiceName,
+		Amount:          transaction.Amount,
+		TransactionType: transaction.TransactionType,
+		CreatedOn:       FormatTanggal(transaction.CreatedOn),
+	}
+}
 func ToBalanceResponse(saldo domain.User) web.BalanceResponse {
 	return web.BalanceResponse{
 		Saldo: saldo.Saldo,

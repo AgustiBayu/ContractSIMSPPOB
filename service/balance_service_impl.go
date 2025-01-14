@@ -8,6 +8,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -46,7 +47,7 @@ func (service *BalanceServiceImpl) TopUpSaldo(ctx context.Context, email string,
 	}
 	err = service.UserRepository.Topup(ctx, tx, email, request.TopupAmoun)
 	helper.PanicIFError(err)
-	err = service.UserRepository.SaveTransaction(ctx, tx, email, request.TopupAmoun, "TOPUP")
+	err = service.UserRepository.SaveTransaction(ctx, tx, email, request.TopupAmoun, "TOPUP", time.Now().Format("2006-01-02 15:04:05"))
 	helper.PanicIFError(err)
 	balance, err := service.UserRepository.BalanceByEmail(ctx, tx, email)
 	if err != nil {

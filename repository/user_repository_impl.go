@@ -110,9 +110,9 @@ func (u *UserRepositoryImpl) Topup(ctx context.Context, tx *sql.Tx, email string
 	return nil
 }
 
-func (u *UserRepositoryImpl) SaveTransaction(ctx context.Context, tx *sql.Tx, email string, amount int, transactionType string) error {
-	SQL := "INSERT INTO transactions (email, amount, transaction_type) VALUES ($1, $2, $3)"
-	_, err := tx.ExecContext(ctx, SQL, email, amount, transactionType)
+func (u *UserRepositoryImpl) SaveTransaction(ctx context.Context, tx *sql.Tx, email string, amount int, transactionType string, createdOn string) error {
+	SQL := "INSERT INTO transactions (email, amount, transaction_type, created_on) VALUES ($1, $2, $3, $4)"
+	_, err := tx.ExecContext(ctx, SQL, email, amount, transactionType, createdOn)
 	if err != nil {
 		return err
 	}

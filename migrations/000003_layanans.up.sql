@@ -1,9 +1,9 @@
 CREATE TABLE layanans(
-    id serial primary key,
-    service_code varchar(50) not null,
+    id serial PRIMARY KEY,
+    service_code varchar(50)not null,
     service_name varchar(50) not null,
     service_icon varchar(255) not null,
-    service_tarif int not null
+    service_tarif int not null       
 );
 
 INSERT INTO layanans (service_code, service_name, service_icon, service_tarif) VALUES
