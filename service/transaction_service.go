@@ -7,4 +7,5 @@ import (
 
 type TransactionService interface {
 	ProcessTransaction(ctx context.Context, request web.TransactionCreateRequest, email string) web.TransactionResponse
+	FindAll(ctx context.Context) []web.TransactionHistory
 }

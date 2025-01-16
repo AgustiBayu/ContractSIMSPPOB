@@ -54,3 +54,19 @@ func (t *TransactionRespositoryImpl) CheckBalance(ctx context.Context, tx *sql.T
 
 	return balance, nil
 }
+
+func (t *TransactionRespositoryImpl) FindAll(ctx context.Context, tx *sql.Tx) []domain.Transaction {
+	SQL := "SELECT id, email, amount, transaction_type, created_on FROM transactions"
+	rows, err := tx.QueryContext(ctx, SQL)
+	helper.PanicIFError(err)
+	defer rows.Close()
+
+	var transactions []domain.Transaction
+	for rows.Next() {
+		transaction := domain.Transaction{}
+		err := rows.Scan(&transaction.Id, &transaction.Email, &transaction.Amount, &transaction.TransactionType, &transaction.CreatedOn)
+		helper.PanicIFError(err)
+		transactions = append(transactions, transaction)
+	}
+	return transactions
+}

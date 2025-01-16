@@ -67,3 +67,12 @@ func (service *TransactionServiceImpl) ProcessTransaction(ctx context.Context, r
 	// Mengembalikan respons
 	return helper.ToTransactionResponse(layanan, transaction)
 }
+
+func (service *TransactionServiceImpl) FindAll(ctx context.Context) []web.TransactionHistory {
+	tx, err := service.DB.Begin()
+	helper.PanicIFError(err)
+	defer helper.RollbackOrCommit(tx)
+
+	transaction := service.TransactionRepository.FindAll(ctx, tx)
+	return helper.ToTransactionHistories(transaction)
+}

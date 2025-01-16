@@ -38,3 +38,13 @@ func (controller *TransactionControllerImpl) ProcessTransaction(writer http.Resp
 	}
 	helper.WriteResponseBody(writer, webResponse)
 }
+
+func (controller *TransactionControllerImpl) FindAll(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	transactionResponse := controller.TransactionService.FindAll(request.Context())
+	webResponse := web.WebResponse{
+		Code:    http.StatusOK,
+		Message: "transaksi history",
+		Data:    transactionResponse,
+	}
+	helper.WriteResponseBody(writer, webResponse)
+}

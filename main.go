@@ -47,6 +47,7 @@ func main() {
 	router.GET("/api/balance", middleware.JWTAuth(userService, balanceController.GetBalanceByEmail))
 	router.POST("/api/topup", middleware.JWTAuth(userService, balanceController.TopUpSaldo))
 	router.POST("/api/transaction", transactionController.ProcessTransaction)
+	router.GET("/api/transaction/history", transactionController.FindAll)
 
 	router.NotFound = http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		exception.HandleNotFound(writer, request)

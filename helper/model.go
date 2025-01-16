@@ -23,6 +23,22 @@ func ToLayananResponse(banner domain.Layanan) web.LayananResponse {
 		ServiceTarif: banner.ServiceTarif,
 	}
 }
+func ToTransactionHistories(transactions []domain.Transaction) []web.TransactionHistory {
+	var transactionResponse []web.TransactionHistory
+	for _, transaction := range transactions {
+		transactionResponse = append(transactionResponse, ToTransactionHitory(transaction))
+	}
+	return transactionResponse
+}
+func ToTransactionHitory(transaction domain.Transaction) web.TransactionHistory {
+	return web.TransactionHistory{
+		Id:              transaction.Id,
+		Email:           transaction.Email,
+		Amount:          transaction.Amount,
+		TransactionType: transaction.TransactionType,
+		CreatedOn:       FormatTanggal(transaction.CreatedOn),
+	}
+}
 func ToTransactionResponse(layanan domain.Layanan, transaction domain.Transaction) web.TransactionResponse {
 	return web.TransactionResponse{
 		InvoiceNumber:   utils.GenerateInvoiceNumber(),
