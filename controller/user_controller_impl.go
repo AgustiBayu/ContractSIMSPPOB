@@ -41,7 +41,7 @@ func (controller *UserControllerImpl) Login(writer http.ResponseWriter, request 
 	}
 	webResponse := web.WebResponse{
 		Code:    http.StatusCreated,
-		Message: "registrasi berhasil",
+		Message: "login berhasil",
 		Data:    userResponse,
 	}
 	helper.WriteResponseBody(writer, webResponse)
